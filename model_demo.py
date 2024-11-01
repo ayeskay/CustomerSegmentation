@@ -2,19 +2,20 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
+import seaborn as sns
 
 # Load the data
-data = pd.read_csv('pds_alt_dataset.csv')
-data = data.dropna()  # Remove rows with missing data
+@st.cache_data  # Caches the data loading
+def load_data():
+    return pd.read_csv('pds_alt_dataset.csv').dropna()
+
+data = load_data()
 
 # Data preprocessing and feature engineering
-# (Add your preprocessing steps here, similar to your notebook)
 data['Age'] = 2024 - data['Year_Birth']
 data["TotalSpend"] = data["MntWines"] + data["MntFruits"] + data["MntMeatProducts"] + data["MntFishProducts"] + data["MntSweetProducts"] + data["MntGoldProds"]
 data["Children"] = data["Kidhome"] + data["Teenhome"]
@@ -33,9 +34,10 @@ if st.checkbox('Show raw data'):
 # Pair plot
 st.subheader("Pair Plot Of Selected Features")
 if st.checkbox('Show pair plot'):
-    To_Plot = ["Income", "Recency", "Age", "TotalSpend", "Is_Parent"]
-    pair_plot = sns.pairplot(data[To_Plot], hue="Is_Parent", palette=["#344E41", "#BC4749"])
-    st.pyplot(pair_plot)
+    To_Plot = data[["Income", "Recency", "Age", "TotalSpend", "Is_Parent"]]
+    fig, ax = plt.subplots()
+    sns.pairplot(To_Plot, hue="Is_Parent", palette=["#344E41", "#BC4749"])
+    st.pyplot(fig)
 
 # Income distribution
 st.subheader("Income Distribution")
@@ -81,8 +83,3 @@ cluster_summary = data.groupby('cluster').agg(
     median_age=('Age', 'median'),
 )
 st.write(cluster_summary)
-
-# Save analysis to CSV
-if st.button('Save Cluster Summary'):
-    cluster_summary.to_csv('cluster_summary.csv', index=True)
-    st.success('Cluster summary saved as "cluster_summary.csv".')
