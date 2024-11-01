@@ -9,6 +9,7 @@ import joblib
 # Title of the app
 st.title("Customer Segmentation Model")
 
+st.markdown("[Insights](https://pds123.streamlit.app)")
 # Input fields for user data
 st.header("Input Customer Information")
 
