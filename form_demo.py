@@ -9,7 +9,22 @@ import joblib
 # Title of the app
 st.title("Customer Segmentation Model")
 
-st.markdown("[Insights](https://pds123.streamlit.app)")
+st.markdown("""
+    <style>
+    .big-font {
+        font-size: 24px !important;
+        color: #1f77b4;
+    }
+    .custom-button {
+        background-color: #1f77b4;
+        color: white;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 # Input fields for user data
 st.header("Input Customer Information")
 
